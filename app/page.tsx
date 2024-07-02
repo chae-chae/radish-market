@@ -11,9 +11,7 @@ export default function Home() {
           <span className="group-focus-within:block hidden">
             Make sure it is a valid email...
           </span>
-          <button className="bg-black text-white p-2 rounded-sample-name">
-            Submit
-          </button>
+          <button className="btn">Submit</button>
         </div>
       </div>
     </main>
