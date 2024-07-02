@@ -8,9 +8,10 @@ export default function Home() {
             className="bg-gray-100 w-full"
             placeholder="Write your email"
           />
-          <span className="group-focus-within:block hidden">
+          <span className="group-focus-within:block hidden text-bigger-hello">
             Make sure it is a valid email...
           </span>
+          <a href="$">asdf</a>
           <button className="btn">Submit</button>
         </div>
       </div>
