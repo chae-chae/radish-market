@@ -6,7 +6,13 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: {
+    extend: {
+      borderRadius: {
+        "sample-name": "21.12px",
+      },
+    },
+  },
   plugins: [],
 };
 export default config;
