@@ -1,10 +1,13 @@
-"use client";
-
 import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
 
 export default function LogIn() {
+  async function handleForm(formData: FormData) {
+    "use server";
+    console.log(formData.get("email"), formData.get("password"));
+    console.log("run in the server");
+  }
   const onClick = async () => {
     const response = await fetch("/www/users", {
       method: "POST",
@@ -21,18 +24,23 @@ export default function LogIn() {
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">이메일과 비밀번호를 입력해 주세요.</h2>
       </div>
-      <form className="flex flex-col gap-3">
-        <FormInput required type="email" placeholder="Email" errors={[]} />
+      <form action={handleForm} className="flex flex-col gap-3">
         <FormInput
+          name="email"
+          required
+          type="email"
+          placeholder="Email"
+          errors={[]}
+        />
+        <FormInput
+          name="password"
           required
           type="password"
           placeholder="password"
           errors={[]}
         />
-      </form>
-      <span onClick={onClick}>
         <FormButton loading={false} text="로그인" />
-      </span>
+      </form>
       <SocialLogin />
     </div>
   );
