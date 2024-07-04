@@ -1,23 +1,14 @@
 import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
+import { resolve } from "path";
 
 export default function LogIn() {
   async function handleForm(formData: FormData) {
     "use server";
-    console.log(formData.get("email"), formData.get("password"));
-    console.log("run in the server");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    console.log("logged in");
   }
-  const onClick = async () => {
-    const response = await fetch("/www/users", {
-      method: "POST",
-      body: JSON.stringify({
-        username: "chaechae",
-        password: "123",
-      }),
-    });
-    console.log(await response.json());
-  };
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -39,7 +30,7 @@ export default function LogIn() {
           placeholder="password"
           errors={[]}
         />
-        <FormButton loading={false} text="로그인" />
+        <FormButton text="로그인" />
       </form>
       <SocialLogin />
     </div>
