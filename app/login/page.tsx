@@ -8,6 +8,7 @@ import { useFormState } from "react-dom";
 
 export default function LogIn() {
   const [state, action] = useFormState(handleForm, null);
+  console.log(state);
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -31,6 +32,7 @@ export default function LogIn() {
         />
         <FormButton text="로그인" />
       </form>
+      <div className="text-green-400">{state?.success ? "Welcome!" : ""}</div>
       <SocialLogin />
     </div>
   );
