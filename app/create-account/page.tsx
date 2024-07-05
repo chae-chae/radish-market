@@ -20,19 +20,28 @@ export default function CreateAccount() {
           required
           type="text"
           placeholder="Username"
+          errors={state?.fieldErrors.username}
         />
-        <FormInput name="email" required type="email" placeholder="Email" />
+        <FormInput
+          name="email"
+          required
+          type="email"
+          placeholder="Email"
+          errors={state?.fieldErrors.email}
+        />
         <FormInput
           name="password"
           required
           type="password"
           placeholder="password"
+          errors={state?.fieldErrors.password}
         />
         <FormInput
           name="confirm_password"
           required
           type="password"
           placeholder="Confirm password"
+          errors={state?.fieldErrors.confirm_password}
         />
         <FormButton text="계정 생성" />
       </form>
