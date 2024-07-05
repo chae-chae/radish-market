@@ -16,23 +16,15 @@ export default function LogIn() {
         <h2 className="text-xl">이메일과 비밀번호를 입력해 주세요.</h2>
       </div>
       <form action={action} className="flex flex-col gap-3">
-        <FormInput
-          name="email"
-          required
-          type="email"
-          placeholder="Email"
-          errors={[]}
-        />
+        <FormInput name="email" required type="email" placeholder="Email" />
         <FormInput
           name="password"
           required
           type="password"
           placeholder="password"
-          errors={state?.errors ?? []}
         />
         <FormButton text="로그인" />
       </form>
-      <div className="text-green-400">{state?.success ? "Welcome!" : ""}</div>
       <SocialLogin />
     </div>
   );
