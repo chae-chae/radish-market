@@ -2,41 +2,43 @@
 import { z } from "zod";
 
 const passwordRegex = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/
 );
-
-const checkUsername = (username: string) => !username.includes("potato");
-
-const checkPasswords = ({
-  password,
-  confirm_password,
-}: {
-  password: string;
-  confirm_password: string;
-}) => password === confirm_password;
 
 const formSchema = z
   .object({
     username: z
-      .string()
-      .min(5)
-      .toLowerCase()
+      .string({
+        invalid_type_error: "Username must be a string!",
+        required_error: "Where is my username???",
+      })
+      .min(3, "Way too short!!!")
+      .max(10, "That is too looooong!")
       .trim()
-      .transform((username) => `*${username}*`)
-      .refine(checkUsername, "no potatoes allowed!"),
-    email: z.string().email(),
+      .toLowerCase()
+      .transform((username) => `🔥 ${username}`)
+      .refine(
+        (username) => !username.includes("potato"),
+        "No potatoes allowed!"
+      ),
+    email: z.string().email().toLowerCase(),
     password: z
       .string()
-      .min(10)
+      .min(4)
       .regex(
         passwordRegex,
-        "A password must have lowercase, Uppercase, a umber, and a special character."
+        "Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-"
       ),
-    confirm_password: z.string().min(10),
+    confirm_password: z.string().min(4),
   })
-  .refine(checkPasswords, {
-    message: "Both pw should be same",
-    path: ["confirm_password"],
+  .superRefine(({ password, confirm_password }, ctx) => {
+    if (password !== confirm_password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Two passwords should be equal",
+        path: ["confirm_password"],
+      });
+    }
   });
 
 export async function createAccount(prevState: any, formData: FormData) {
@@ -44,7 +46,7 @@ export async function createAccount(prevState: any, formData: FormData) {
     username: formData.get("username"),
     email: formData.get("email"),
     password: formData.get("password"),
-    confirm_password: formData.get("confirm_password"),
+    confirm_password: formData.get("confirmPassword"),
   };
   const result = formSchema.safeParse(data);
   if (!result.success) {
