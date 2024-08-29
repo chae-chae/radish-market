@@ -1,62 +1,46 @@
 "use server";
 
-import { z } from "zod";
-import fs from "fs/promises";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
-const productSchema = z.object({
-  photo: z.string({
-    required_error: "Photo is required",
-  }),
-  title: z.string({
-    required_error: "Title is required",
-  }),
-  description: z.string({
-    required_error: "Description is required",
-  }),
-  price: z.coerce.number({
-    required_error: "Price is required",
-  }),
-});
+const title = z.string();
 
-export async function uploadProduct(_: any, formData: FormData) {
-  const data = {
-    photo: formData.get("photo"),
-    title: formData.get("title"),
-    price: formData.get("price"),
-    description: formData.get("description"),
-  };
-  if (data.photo instanceof File) {
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
+export async function startStream(_: any, formData: FormData) {
+  const results = title.safeParse(formData.get("title"));
+  if (!results.success) {
+    return results.error.flatten();
   }
-  const result = productSchema.safeParse(data);
-  if (!result.success) {
-    return result.error.flatten();
-  } else {
-    const session = await getSession();
-    if (session.id) {
-      const product = await db.product.create({
-        data: {
-          title: result.data.title,
-          description: result.data.description,
-          price: result.data.price,
-          photo: result.data.photo,
-          user: {
-            connect: {
-              id: session.id,
-            },
-          },
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/stream/live_inputs`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
+      },
+      body: JSON.stringify({
+        meta: {
+          name: results.data,
         },
-        select: {
-          id: true,
+        recording: {
+          mode: "automatic",
         },
-      });
-      redirect(`/products/${product.id}`);
-      //redirect("/products")
+      }),
     }
-  }
+  );
+  const data = await response.json();
+  const session = await getSession();
+  const stream = await db.liveStream.create({
+    data: {
+      title: results.data,
+      stream_id: data.result.uid,
+      stream_key: data.result.rtmps.streamKey,
+      userId: session.id!,
+    },
+    select: {
+      id: true,
+    },
+  });
+  redirect(`/streams/${stream.id}`);
 }
