@@ -7,7 +7,7 @@ export default function SocialLogin() {
       <div className="w-full h-px bg-neutral-500" />
       <div className="flex flex-col gap-3">
         <Link
-          className="primary-btn flex h-10 items-center justify-center gap-3"
+          className="primary-btn flex h-10 items-center justify-center gap-2"
           href="/github/start"
         >
           <svg
@@ -23,16 +23,14 @@ export default function SocialLogin() {
               clipRule="evenodd"
             ></path>
           </svg>
-          <span>Github으로 계속하기</span>
+          <span>Continue with Github</span>
         </Link>
         <Link
-          className="primary-btn flex h-10 items-center justify-center gap-3"
+          className="primary-btn flex h-10 items-center justify-center gap-2"
           href="/sms"
         >
-          <span>
-            <ChatBubbleOvalLeftEllipsisIcon className="size-6" />
-          </span>
-          <span>SMS로 계속하기</span>
+          <ChatBubbleOvalLeftEllipsisIcon className="size-6" />
+          <span>Continue with SMS</span>
         </Link>
       </div>
     </>
