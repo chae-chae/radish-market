@@ -8,8 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        roboto: "var(--roboto-text)",
+        rubick: "var(--rubick-text)",
+        metallica: "var(--metallica-text)",
+      },
+      margin: {
+        tomato: "120px",
+      },
       borderRadius: {
-        "sample-name": "21.12px",
+        "sexy-name": "11.11px",
       },
     },
   },
